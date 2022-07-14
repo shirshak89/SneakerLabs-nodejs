@@ -1,1 +1,1 @@
-# sneakerlabs-nodejs
+# SneakerLabs-nodejs
