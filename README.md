@@ -1,1 +1,1 @@
-# SneakerLabs-nodejs
+# SneakerLabs - NodeJS
