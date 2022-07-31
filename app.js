@@ -18,6 +18,7 @@ const errorHandlerMiddleware = require("./middleware/error-handler");
 // routes import
 const authRouter = require("./routes/authRoutes");
 const userRouter = require("./routes/userRoutes");
+const productRouter = require("./routes/productRoutes");
 
 // middlewares
 app.use(express.json());
@@ -36,6 +37,7 @@ app.get("/test", (req, res) => {
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/products", productRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
