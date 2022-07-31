@@ -17,12 +17,11 @@ const getSingleUser = async (req, res) => {
 };
 
 const showCurrentUser = async (req, res) => {
-  console.log(req.user);
-  res.send("Show current user");
+  res.status(StatusCodes.OK).json(req.user);
 };
 
 const updateUser = async (req, res) => {
-  res.send("Update user");
+  res.send("Update use");
 };
 
 const updateUserPassword = async (req, res) => {
