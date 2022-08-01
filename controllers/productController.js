@@ -1,6 +1,8 @@
 const CustomError = require("../errors");
 const Product = require("../models/Product");
 const { StatusCodes } = require("http-status-codes");
+const cloudinary = require("cloudinary").v2;
+const fs = require("fs");
 
 const createProduct = async (req, res) => {
   req.body.user = req.user.userId;
@@ -57,7 +59,17 @@ const deleteProduct = async (req, res) => {
 };
 
 const uploadImage = async (req, res) => {
-  res.send("upload image");
+  const result = await cloudinary.uploader.upload(
+    req.files.image.tempFilePath,
+    {
+      use_filename: true,
+      folder: "sneaker-labs",
+    }
+  );
+
+  fs.unlinkSync(req.files.image.tempFilePath);
+
+  return res.status(StatusCodes.OK).json({ image: { src: result.secure_url } });
 };
 
 module.exports = {

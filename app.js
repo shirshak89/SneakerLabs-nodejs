@@ -5,6 +5,14 @@ const cookieParser = require("cookie-parser");
 const express = require("express");
 const app = express();
 
+const fileUpload = require("express-fileupload");
+const cloudinary = require("cloudinary").v2;
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+});
+
 const cors = require("cors");
 const morgan = require("morgan");
 
@@ -21,7 +29,9 @@ const userRouter = require("./routes/userRoutes");
 const productRouter = require("./routes/productRoutes");
 
 // middlewares
+app.use(express.static("./public"));
 app.use(express.json());
+app.use(fileUpload({ useTempFiles: true }));
 app.use(morgan("tiny"));
 app.use(cookieParser(process.env.JWT_SECRET));
 app.use(cors());
