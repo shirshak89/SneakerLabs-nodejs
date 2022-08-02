@@ -1,16 +1,33 @@
 const { StatusCodes } = require("http-status-codes");
 const Review = require("../models/Review");
+const Product = require("../models/Review");
 const CustomError = require("../errors");
 const checkPermissions = require("../utils/checkPermissions");
 
 const createReview = async (req, res) => {
   const { product: productId } = req.body;
 
-  req.body.user = req.user.userId;
+  const product = await Product.find({ _id: productId });
 
+  if (!product) {
+    throw new CustomError.NotFoundError(`No product with id: ${productId}`);
+  }
+
+  const alreadySubmmitted = await Review.findOne({
+    product: productId,
+    user: req.user.userId,
+  });
+
+  if (alreadySubmmitted) {
+    throw new CustomError.BadRequestError(
+      "Already submitted review for this product"
+    );
+  }
+
+  req.body.user = req.user.userId;
   const review = await Review.create(req.body);
 
-  res.status(StatusCodes.CREATED).send(review);
+  res.status(StatusCodes.CREATED).json(review);
 };
 
 const getAllReviews = async (req, res) => {
@@ -66,10 +83,17 @@ const deleteReview = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "Review Removed" });
 };
 
+const getSingleProductReviews = async (req, res) => {
+  const { id: productId } = req.params;
+  const reviews = await Review.find({ product: productId });
+  res.status(StatusCodes.OK).json({ reviews, count: reviews.length });
+};
+
 module.exports = {
   createReview,
   getAllReviews,
   getSingleReview,
   updateReview,
   deleteReview,
+  getSingleProductReviews,
 };
