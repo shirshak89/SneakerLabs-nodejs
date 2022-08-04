@@ -11,7 +11,15 @@ const createProduct = async (req, res) => {
 };
 
 const getAllProducts = async (req, res) => {
-  const products = await Product.find({});
+  const { featured } = req.query;
+
+  const queryObject = {};
+
+  if (featured) {
+    queryObject.featured = featured === "true" ? true : false;
+  }
+
+  const products = await Product.find(queryObject);
   res.status(StatusCodes.OK).json({ products, count: products.length });
 };
 
