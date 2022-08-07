@@ -20,7 +20,7 @@ const ProductSchema = new mongoose.Schema(
     company: {
       type: String,
       enum: {
-        values: ["adidas", "nike"],
+        values: ["adidas", "nike", "vans"],
         message: "{VALUE} is not supported",
       },
     },
@@ -40,6 +40,14 @@ const ProductSchema = new mongoose.Schema(
       type: Number,
       required: true,
       default: 15,
+    },
+    category: {
+      type: String,
+      enum: {
+        values: ["running", "outdoor", "lifestyle", "sports", "causal"],
+        message: "{VALUE} is not supported",
+      },
+      required: true,
     },
     numOfReviews: {
       type: Number,
