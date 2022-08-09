@@ -11,7 +11,7 @@ const createProduct = async (req, res) => {
 };
 
 const getAllProducts = async (req, res) => {
-  const { featured } = req.query;
+  const { featured, company, name, sort } = req.query;
 
   const queryObject = {};
 
@@ -19,7 +19,25 @@ const getAllProducts = async (req, res) => {
     queryObject.featured = featured === "true" ? true : false;
   }
 
-  const products = await Product.find(queryObject);
+  if (company) {
+    queryObject.company = company;
+  }
+
+  if (name) {
+    queryObject.name = { $regex: name, $options: "i" };
+  }
+
+  let result = Product.find(queryObject);
+
+  if (sort) {
+    const sortList = sort.split(",").join(" ");
+    result = result.sort(sortList);
+  } else {
+    result = result.sort("createdAt");
+  }
+
+  const products = await result;
+
   res.status(StatusCodes.OK).json({ products, count: products.length });
 };
 
